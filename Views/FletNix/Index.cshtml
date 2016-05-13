@@ -1,0 +1,13 @@
+@model IEnumerable<FletNix.Models.Genre>
+@{
+    ViewData["Title"] = "Home";
+}
+<h1>Welkom op FletNix</h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta expedita, sint optio. Quae voluptates itaque maiores blanditiis ex eaque ullam, numquam quas, quo laudantium, perferendis nostrum aspernatur excepturi labore fugit!</p>
+
+<ul>
+@foreach (var genre in Model)
+{
+    <li>@genre.genre_name</li>
+}
+</ul>
