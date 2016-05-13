@@ -79,7 +79,7 @@ namespace FletNix
             });
         }
 
-        // Entry point for the application
+        // Entry point for the application.
         public static void Main(string[] args) => Microsoft.AspNet.Hosting.WebApplication.Run<Startup>(args);
     }
 }
