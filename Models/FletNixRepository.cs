@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Data.Entity;
 
 namespace FletNix.Models
 {
@@ -16,13 +19,5 @@ namespace FletNix.Models
         {
             return _context.Genre.OrderBy(t => t.genre_name).ToList();
         }
-
-        // public SaveGenre(Genre object)
-        // {
-        //     _context.Database.BeginTransaction();
-        //     _context.Genre.Update(object);
-        //     _context.SaveChanges();
-        //     _context.Database.CommitTransaction();
-        // }
     }
 }

@@ -1,0 +1,80 @@
+﻿@model FletNix.ViewModels.OverviewMovieViewModel
+
+@{
+    ViewData["title"] = "Watch movies";
+
+    if (ViewData["from"] != null)
+    {
+        if (int.Parse(ViewData["from"].ToString()) != 0)
+        {
+            ViewData["fromNeg"] = int.Parse(ViewData["from"].ToString()) - 20;
+        }
+        ViewData["from"] = int.Parse(ViewData["from"].ToString()) + 20;
+    }
+    else
+    {
+        ViewData["from"] = 20;
+    }
+
+    ViewData["current"] = int.Parse(ViewData["from"].ToString()) - 20;
+}
+
+
+<h1>@ViewData["title"]</h1>
+<form id="search">
+    <paper-input type="title" name="search" label="Search on title of the movie"></paper-input>
+    <paper-icon-button icon="search" onclick="sendForm(this)"></paper-icon-button>
+</form>
+
+@{
+    if (Model.searchedMovies != null)
+    {
+        <div id="searchedMovies">
+            @foreach (var movie in Model.searchedMovies)
+            {
+               <a asp-controller="Movie"
+               asp-action="Detail"
+               asp-route-movie="@movie.movie_id"><paper-card class="movieCard" heading="@movie.title" image="/images/movie.jpg"></paper-card></a>
+            }
+        </div>
+
+        <div id="pagination">
+            @{
+                if (int.Parse(ViewData["from"].ToString()) == 20)
+                {
+                    <paper-button disabled><iron-icon icon="chevron-left"></iron-icon></paper-button>
+                }
+                else
+                {
+                    <a asp-controller="Movie"
+                       asp-action="Overview"
+                       asp-route-search="@ViewData["search"]"
+                       asp-route-from="@ViewData["fromNeg"]"><paper-button><iron-icon icon="chevron-left"></iron-icon></paper-button></a>
+                }
+            }
+            <a asp-controller="Movie"
+               asp-action="Overview"
+               asp-route-search="@ViewData["search"]"
+               asp-route-from="@ViewData["from"]"><paper-button><iron-icon icon="chevron-right"></iron-icon></paper-button></a>
+        </div>
+     }
+}
+
+<h1>Most populair movies</h1>
+<div id="mostPopulairMovies">
+    @{
+        foreach (var movie in Model.populairMovies)
+        {
+            <a asp-controller="Movie"
+               asp-action="Detail"
+               asp-route-movie="@movie.movie_id"><paper-card class="movieCard" heading="@movie.title" image="/images/movie.jpg"></paper-card></a>
+        }
+    }
+
+</div>
+
+<script>
+    var sendForm = function (element) {
+        element.parentElement.submit();
+    };
+</script>

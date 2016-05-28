@@ -1,0 +1,37 @@
+﻿@model IEnumerable<FletNix.Models.Movie>
+@{
+    var movie = Model.First();
+    ViewData["title"] = "Rate " + movie.title;
+}
+
+<h1>@ViewData["title"]</h1>
+<div id="movieHeader">
+    <iron-image src="http://lorempixel.com/325/400" style="background-color: lightgray;" preload fade></iron-image>
+    <div id="movieInformation">
+        <form asp-controller="RateMovie" asp-action="Add" method="post">
+            <h3>Rating</h3>
+            <input type="hidden" name="movieId" value="@movie.movie_id"/>
+            <input type="radio" name="rating" value="1"> 1
+            <input type="radio" name="rating" value="2"> 2
+            <input type="radio" name="rating" value="3"> 3
+            <input type="radio" name="rating" value="4"> 4
+            <input type="radio" name="rating" value="5"> 5
+            <input type="radio" name="rating" value="6"> 6
+            <input type="radio" name="rating" value="7"> 7
+            <input type="radio" name="rating" value="8"> 8
+            <input type="radio" name="rating" value="9"> 9
+            <input type="radio" name="rating" value="10"> 10
+
+            <h3>Comment</h3>
+            <textarea cols="65" rows="10" name="comment"></textarea>
+
+            <paper-button onclick="sendForm(this)" id="sendRating">Send rating</paper-button>
+        </form>
+    </div>
+</div>
+
+<script>
+    var sendForm = function (element) {
+        element.parentElement.submit();
+    };
+</script>

@@ -1,0 +1,142 @@
+﻿@model FletNix.ViewModels.DetailedMovieViewModel
+@{
+    var movie = Model.detailedInformation.First();
+
+    ViewData["title"] = movie.title;
+}
+
+<h1>@ViewData["title"]</h1>
+
+<div id="movieHeader">
+    <iron-image src="http://lorempixel.com/325/400" style="background-color: lightgray;" preload fade></iron-image>
+    <div id="movieInformation">
+        <table>
+            <tr>
+                <td>Movie title</td>
+                <td>@movie.title</td>
+            </tr>
+            <tr>
+                <td>Duration</td>
+                <td>@movie.duration</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>@movie.description</td>
+            </tr>
+            <tr>
+                <td>Publication year</td>
+                <td>@movie.publication_year</td>
+            </tr>
+            <tr>
+                <td>Director</td>
+                <td>
+                    @{
+                        if (movie.Movie_Director.Count == 0)
+                        {
+                            <span>No director</span>
+                        }
+                        else
+                        {
+                            <span>@movie.Movie_Director.First().person.firstname @movie.Movie_Director.First().person.lastname</span>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Genre</td>
+                <td>@{
+                        if (movie.Movie_Genre.Count == 0)
+                        {
+                            <span>No genre</span>
+                        }
+                        else
+                        {
+                            <span>@movie.Movie_Genre.First().genre_name</span>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Previous part</td>
+                <td>@{
+                        if (movie.previous_part == null)
+                        {
+                            <span>No previous part</span>
+                        }
+                        else
+                        {
+                            <span>@movie.previous_part</span>
+                        }
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Minimum age</td>
+                <td>
+                    @{
+                        if (movie.minimum_age == null)
+                        {
+                            <span>All ages</span>
+                        }
+                        else
+                        {
+                            <span>@movie.minimum_age year</span>
+                        }
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td>Price</td>
+                <td>&euro;@movie.price</td>
+            </tr>
+        </table>
+        @{
+            if (Model.userWatchedMovie)
+            {
+                <a asp-controller="Movie"
+                   asp-action="Watch"
+                   asp-route-movie="@movie.movie_id">
+                    <paper-button class="marginBtn bought">Watch this movie</paper-button>
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Movie"
+                   asp-action="Watch"
+                   asp-route-movie="@movie.movie_id">
+                    <paper-button class="marginBtn">Buy and watch this movie</paper-button>
+                </a>
+            }
+        }
+    </div>
+</div>
+
+<h2>Ratings by other users</h2>
+
+@foreach (var rating in Model.ratings)
+{
+    <paper-card class="rating">
+        @{
+            for (var i = 0; i < rating.rating; i++)
+            {
+                <iron-icon class="star bigIcon" icon="star"></iron-icon>
+            }
+            for (int i = 0; i < (10 - rating.rating); i++)
+            {
+                <iron-icon class="star bigIcon" icon="star-border"></iron-icon>
+            }
+        }
+        <hr />
+        <strong>@rating.feedback_date</strong>
+        <p>@rating.comments</p>
+    </paper-card>
+}
+
+@{
+    if (!Model.ratings.Any())
+    {
+        <h4>No ratings for this movie yet</h4>
+    }
+}
+

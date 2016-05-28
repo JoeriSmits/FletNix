@@ -4,9 +4,8 @@ using Microsoft.Data.Entity.Metadata;
 
 namespace FletNix.Models
 {
-    public partial class FletNixContext : DbContext
+    public partial class FletNixContext : IdentityDbContext<FletNixUser>
     {
-        // IdentityDbContext<FletNixUser>
         public FletNixContext() {
             Database.EnsureCreated();
             Database.Migrate();
@@ -14,11 +13,14 @@ namespace FletNix.Models
         
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer(@"Server=tcp:nots-joeri.database.windows.net,1433;Database=FletNix;User ID=JoeriSmits;Password=Joeri123;Connection Timeout=30;");
+            options.UseSqlServer(Startup.Configuration["Data:FletNixContextConnection"]);
+            base.OnConfiguring(options);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasKey(e => e.customer_mail_address);

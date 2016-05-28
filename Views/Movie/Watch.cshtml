@@ -1,0 +1,21 @@
+﻿@model IEnumerable<FletNix.Models.Movie>
+@{
+    var movie = Model.First();
+
+    ViewData["title"] = movie.title;
+}
+
+<h1>Watch @ViewData["title"]</h1>
+
+<div id="videoContainer">
+    <video controls>
+        <source src="http://media.w3.org/2010/05/sintel/trailer.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+        <source src="http://media.w3.org/2010/05/sintel/trailer.ogv" type='video/ogg; codecs="theora, vorbis"'>
+        <source src="http://media.w3.org/2010/05/sintel/trailer.webm" type='video/webm; codecs="vp8, vorbis"'/>
+        Video not supported.
+    </video>
+
+    <a asp-controller="Movie"
+       asp-action="Detail"
+       asp-route-movie="@movie.movie_id"><paper-button class="marginBtn">Back to the detail page</paper-button></a>
+</div>

@@ -1,0 +1,33 @@
+﻿@model FletNix.ViewModels.RateViewModel
+@{
+    ViewData["title"] = "Rate your watched movies";
+}
+
+<h1>@ViewData["title"]</h1>
+<h4>Select your movie to rate</h4>
+@foreach (var watchHistory in Model.WatchHistories)
+{
+    <a asp-controller="RateMovie"
+       asp-action="Rate"
+       asp-route-movie="@watchHistory.movie_id">
+        <paper-card class="watchedMovie movieCard">
+            <h2 class="inlineBlock">@watchHistory.movie.title</h2>
+            <div class="ratingIcons">
+            @{
+                if (Model.CustomerFeedback.Any(cf => cf.movie_id == watchHistory.movie_id))
+                {
+                    var record = Model.CustomerFeedback.Where(cf => cf.movie_id == watchHistory.movie_id);
+                    for (var i = 0; i < record.First().rating; i++)
+                    {
+                        <iron-icon class="star bigIcon" icon="star"></iron-icon>
+                    }
+                    for (int i = 0; i < (10 - record.First().rating); i++)
+                    {
+                        <iron-icon class="star bigIcon" icon="star-border"></iron-icon>
+                    }
+                }
+            }
+            </div>
+        </paper-card>
+    </a>
+}

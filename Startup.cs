@@ -24,7 +24,7 @@ namespace FletNix
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        public static IConfigurationRoot Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,18 +36,25 @@ namespace FletNix
                 .AddSqlServer()
                 .AddDbContext<FletNixContext>();
                 
-            // services.AddIdentity<FletNixUser, IdentityRole>(config =>
-            // {
-            //     config.User.RequireUniqueEmail = true;
-            //     config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
-            // })
-            // .AddEntityFrameworkStores<FletNixContext>();
-                
+             services.AddIdentity<FletNixUser, IdentityRole>(config =>
+             {
+                 config.User.RequireUniqueEmail = true;
+                 config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
+             })
+             .AddEntityFrameworkStores<FletNixContext>();
+
+            services.AddCaching();
+
+            services.AddTransient<FletNixContextSeedData>();
+
             services.AddScoped<IFletNixRepository, FletNixRepository>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
+            services.AddScoped<IWatchHistoryRepository, WatchHistoryRepository>();
+            services.AddScoped<ICustomerFeedbackRepository, CustomerFeedbackRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, FletNixContextSeedData seeder, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseMiddleware<DeepLinkBlocker>();
             
@@ -63,11 +70,9 @@ namespace FletNix
                 app.UseExceptionHandler("/FletNix/Error");
             }
 
-            app.UseIISPlatformHandler();
-
             app.UseStaticFiles();
             
-            // app.UseIdentity();
+            app.UseIdentity();
 
             app.UseMvc(routes =>
             {
@@ -77,6 +82,8 @@ namespace FletNix
                     defaults: new { controller = "FletNix", action = "Index" }
                 );
             });
+
+            await seeder.EnsureSeedDataAsync();
         }
 
         // Entry point for the application.

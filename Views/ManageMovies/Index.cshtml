@@ -1,0 +1,70 @@
+﻿@model IEnumerable<FletNix.Models.Movie>
+@{
+    ViewData["title"] = "Manage movies";
+
+    if (ViewData["from"] != null)
+    {
+        if (int.Parse(ViewData["from"].ToString()) != 0)
+        {
+            ViewData["fromNeg"] = int.Parse(ViewData["from"].ToString()) - 20;
+        }
+        ViewData["from"] = int.Parse(ViewData["from"].ToString()) + 20;
+    }
+    else
+    {
+        ViewData["from"] = 20;
+    }
+
+    ViewData["current"] = int.Parse(ViewData["from"].ToString()) - 20;
+}
+
+<h1>@ViewData["title"]</h1>
+
+@foreach (var movie in Model)
+{
+    <paper-card class="movie">
+        <h2>@movie.title</h2>
+        <div id="filler"></div>
+        <div id="filler"></div>
+        <div id="filler"></div>
+        <div id="filler"></div>
+        <div id="filler"></div>
+        <div id="filler"></div>
+        <div class="icons">
+            <paper-icon-button id="edit" icon="create"></paper-icon-button>
+            <form id="deleteMovie" asp-controller="ManageMovies" asp-action="Delete" method="post">
+                <input type="hidden" name="from" value="@ViewData["current"]"/>
+                <input type="hidden" name="movieId" value="@movie.movie_id"/>
+                <paper-icon-button id="delete" onclick="sendForm(this)" icon="delete"></paper-icon-button>
+            </form>
+         </div>
+    </paper-card>
+}
+
+<div id="pagination">
+    @{
+        if (int.Parse(ViewData["from"].ToString()) == 20)
+        {
+            <paper-button disabled><iron-icon icon="chevron-left"></iron-icon></paper-button>
+        }
+        else
+        {
+            <a asp-controller="ManageMovies"
+               asp-action="Index"
+               asp-route-from="@ViewData["fromNeg"]"><paper-button><iron-icon icon="chevron-left"></iron-icon></paper-button></a>
+        }
+    }
+    <a asp-controller="ManageMovies"
+       asp-action="Index"
+       asp-route-from="@ViewData["from"]"><paper-button><iron-icon icon="chevron-right"></iron-icon></paper-button></a>
+</div>
+
+<paper-fab icon="add"></paper-fab>
+
+<script>
+    var sendForm = function (element) {
+        if (confirm("Are you sure that you want to delete this movie?")) {
+            element.parentElement.submit();
+        }
+    };
+</script>

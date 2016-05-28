@@ -1,3 +1,103 @@
 body {
-    --paper-toolbar-background: red;
+    font-family: 'Roboto', 'Noto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-color: #222222;
+    color: white;
+}
+
+#content {
+    padding: 0 1em 2.5em 1em;
+}
+
+.profilePic {
+    border-radius: 100%;
+    margin-right: 0.5em;
+}
+
+a.btn {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: white;
+}
+
+.movie {
+    width: 100%;
+    color: white;
+    margin-bottom: 1em;
+}
+
+.icons {
+    margin-right: 1em;
+}
+
+paper-fab {
+    position: fixed !important;
+    right: 2.5em;
+    bottom: 1em;
+}
+
+form {
+    display: inline-block;
+}
+
+#search {
+    width: 100%;
+}
+
+.movieCard {
+    width: 275px;
+    margin: 0.5em;
+}
+
+#movieInformation {
+    margin-left: 1em;
+}
+
+#movieInformation table {
+    font-size: 1.2em;
+}
+
+#movieInformation table td {
+    padding-right: 1.5em;
+}
+
+#videoContainer {
+    width: 100%;
+    text-align: center;
+}
+
+.marginBtn {
+    margin-top: 1em;
+}
+
+.bought {
+    background-color: #006400 !important;
+}
+
+.rating {
+    width: 100%;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.watchedMovie {
+    width: 100%;
+    padding: 0 1em;
+}
+
+#sendRating {
+    display: block;
+    margin-top: 1em;
+}
+
+.inlineBlock {
+    display: inline-block;
+}
+
+.ratingIcons {
+    margin-left: 1em;
+    display: inline-block;
+    position: relative;
+    top: -3px;
 }

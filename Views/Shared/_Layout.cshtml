@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -9,34 +9,155 @@
         <link rel="import" href="~/bower_components/paper-toolbar/paper-toolbar.html">
         <link rel="import" href="~/bower_components/paper-icon-button/paper-icon-button.html">
         <link rel="import" href="~/bower_components/paper-menu/paper-menu.html">
-        
+        <link rel="import" href="~/bower_components/paper-item/paper-item.html">
+        <link rel="import" href="~/bower_components/paper-card/paper-card.html">
+        <link rel="import" href="~/bower_components/paper-fab/paper-fab.html">
+        <link rel="import" href="~/bower_components/paper-button/paper-button.html">
+        <link rel="import" href="~/bower_components/paper-input/paper-input.html"/>
+
         <link rel="import" href="~/bower_components/iron-icons/iron-icons.html">
-       
+        <link rel="import" href="~/bower_components/iron-flex-layout/iron-flex-layout.html">
+        <link rel="import" href="~/bower_components/iron-image/iron-image.html"/>
+
+        <link rel="stylesheet" href="~/css/site.css"/>
+
         <title>@ViewData["Title"] - FletNix</title>
     </head>
-    <body>
+    <body unresolved>
+    <style is="custom-style">
+        :root {
+            --primary-color: #E00712;
+            --primary-background-color: #444444;
+
+            --paper-card-header-color: white;
+            --primary-text-color: white;
+            --secondary-text-color: white;
+
+            --paper-fab-background: var(--primary-color);
+
+            --paper-card-header-text: {
+                 text-shadow: 0 0 10px #444;
+                 color: var(--primary-color);
+             }
+        }
+
+        paper-drawer-panel {
+            --paper-drawer-panel-drawer-container: {
+                 background-color: var(--primary-background-color);
+            };
+        }
+
+        paper-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        paper-button[disabled] {
+            background-color: var(--primary-background-color);
+        }
+
+        #edit {
+            --iron-icon-fill-color: #ffd700;
+        }
+
+        .star {
+            --iron-icon-fill-color: #ffd700;
+        }
+
+        .bigIcon {
+            --iron-icon-height: 32px;
+            --iron-icon-width: 32px;
+        }
+
+        #delete {
+            --iron-icon-fill-color: var(--primary-color);
+        }
+        
+        .movie {
+            @@apply(--layout-flex);
+            @@apply(--layout-horizontal);
+            @@apply(--layout-justified);
+            @@apply(--layout-center);
+        }
+        
+        .movie h2 {
+            @@apply(--layout-self-start);
+        }  
+
+        #search {
+            @@apply(--layout-flex);
+            @@apply(--layout-horizontal);
+            @@apply(--layout-justified);
+            @@apply(--layout-center);
+        }
+
+        #videoContainer {
+           @@apply(--layout-flex);
+           @@apply(--layout-vertical);
+        }
+
+        #mostPopulairMovies, #searchedMovies {
+            width: 100%;
+            text-align: center;
+        }
+
+        #search paper-input {
+            width: 100%;
+        }
+
+        .movieCard:hover {
+            background-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        #movieHeader {
+            @@apply(--layout-flex);
+            @@apply(--layout-horizontal);
+        }
+
+        #movieInformation table tr td:first-child {
+            color: var(--primary-color); 
+        }
+
+        a {
+            color: var(--primary-text-color);
+            text-decoration: none;
+        }
+
+    </style>
         <paper-drawer-panel>
             <paper-header-panel drawer>
                 <paper-toolbar>
-                    <div>Navigation</div>
+                    <span>Menu</span>
                 </paper-toolbar>
                 <div>
                     <paper-menu>
-                        <paper-item>
-                            <a asp-controller="FletNix" asp-action="Index">Home</a>
-                        </paper-item>
-                        <paper-item>
-                            <a asp-controller="FletNix" asp-action="About">About</a>
-                        </paper-item>
+                        <a asp-controller="FletNix" asp-action="Index"><paper-item>Home</paper-item></a>
+                        <a asp-controller="FletNix" asp-action="About"><paper-item>About</paper-item></a>
+                        <a asp-controller="ManageMovies" asp-action="Index"><paper-item>Manage movies</paper-item></a>
+                        <a asp-controller="Movie" asp-action="Overview"><paper-item>Watch movies</paper-item></a>
+                        <a asp-controller="RateMovie" asp-action="Index"><paper-item>Rate movies</paper-item></a>
                     </paper-menu>
                 </div>
             </paper-header-panel>
             <paper-header-panel main>
                 <paper-toolbar>
                     <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-                    <div>FletNix</div>
-                </paper-toolbar>
-                <div>@RenderBody()</div>
+                    <span class="title">FletNix</span>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <img class="profilePic" src="http://lorempixel.com/40/40/"/>
+                        <span>@User.Identity.Name</span>
+                        <a class="btn" asp-controller="Auth" asp-action="Logout">
+                            <paper-icon-button icon="exit-to-app"></paper-icon-button>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Auth" asp-action="Login">Login</a>
+                    }
+                    </paper-toolbar>
+                <div id="content">@RenderBody()</div>
             </paper-header-panel>
         </paper-drawer-panel>
     </body>
