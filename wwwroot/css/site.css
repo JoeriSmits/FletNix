@@ -101,3 +101,18 @@ form {
     position: relative;
     top: -3px;
 }
+
+.newMovie {
+    width: 80%
+}
+
+.newMovie div {
+    margin: 0.5em;
+}
+
+.newMovie div label {
+    vertical-align: top;
+    display: block;
+    float: left;
+    width: 40%;
+}

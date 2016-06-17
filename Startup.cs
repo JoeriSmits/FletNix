@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using FletNix.Models;
 using FletNix.MiddleWare;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Mvc;
 
 namespace FletNix
 {
@@ -22,6 +23,11 @@ namespace FletNix
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddApplicationInsightsSettings(developerMode: true);
+            }
         }
 
         public static IConfigurationRoot Configuration { get; set; }
@@ -30,32 +36,48 @@ namespace FletNix
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
-            
+            services.AddMvc(config =>
+            {
+                services.Configure<MvcOptions>(options =>
+                {
+                    options.Filters.Add(new RequireHttpsAttribute());
+                });
+            });
+
             services.AddEntityFramework()
                 .AddSqlServer()
                 .AddDbContext<FletNixContext>();
-                
-             services.AddIdentity<FletNixUser, IdentityRole>(config =>
+
+            services.AddCaching();
+
+            services.AddIdentity<FletNixUser, IdentityRole>(config =>
              {
                  config.User.RequireUniqueEmail = true;
                  config.Cookies.ApplicationCookie.LoginPath = "/Auth/Login";
              })
              .AddEntityFrameworkStores<FletNixContext>();
 
-            services.AddCaching();
-
             services.AddTransient<FletNixContextSeedData>();
+
+            services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddScoped<IFletNixRepository, FletNixRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IWatchHistoryRepository, WatchHistoryRepository>();
             services.AddScoped<ICustomerFeedbackRepository, CustomerFeedbackRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IMovieAwardRepository, MovieAwardsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public async void Configure(IApplicationBuilder app, FletNixContextSeedData seeder, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseIISPlatformHandler();
+
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseIdentity();
+
             app.UseMiddleware<DeepLinkBlocker>();
             
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -69,10 +91,9 @@ namespace FletNix
             {
                 app.UseExceptionHandler("/FletNix/Error");
             }
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
-            
-            app.UseIdentity();
 
             app.UseMvc(routes =>
             {

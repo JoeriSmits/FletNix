@@ -31,7 +31,7 @@
         <div id="filler"></div>
         <div id="filler"></div>
         <div class="icons">
-            <paper-icon-button id="edit" icon="create"></paper-icon-button>
+            <a asp-controller="ManageMovies" asp-action="Edit" asp-route-movie="@movie.movie_id"><paper-icon-button id="edit" icon="create"></paper-icon-button></a>
             <form id="deleteMovie" asp-controller="ManageMovies" asp-action="Delete" method="post">
                 <input type="hidden" name="from" value="@ViewData["current"]"/>
                 <input type="hidden" name="movieId" value="@movie.movie_id"/>
@@ -59,7 +59,7 @@
        asp-route-from="@ViewData["from"]"><paper-button><iron-icon icon="chevron-right"></iron-icon></paper-button></a>
 </div>
 
-<paper-fab icon="add"></paper-fab>
+<a asp-controller="ManageMovies" asp-action="New"><paper-fab icon="add"></paper-fab></a>
 
 <script>
     var sendForm = function (element) {

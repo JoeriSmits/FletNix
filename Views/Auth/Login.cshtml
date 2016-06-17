@@ -4,7 +4,7 @@
 }
 <form method="post" novalidate>
     <div asp-validation-summary="ValidationSummary.ModelOnly"></div>
-
+    @Html.AntiForgeryToken()
     <div>
         <label asp-for="Username"></label>
         <input asp-for="Username"/>

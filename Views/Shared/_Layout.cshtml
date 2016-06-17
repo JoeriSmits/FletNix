@@ -2,7 +2,9 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+
         <script src="~/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
         <link rel="import" href="~/bower_components/paper-drawer-panel/paper-drawer-panel.html">
         <link rel="import" href="~/bower_components/paper-header-panel/paper-header-panel.html">
@@ -16,6 +18,7 @@
         <link rel="import" href="~/bower_components/paper-input/paper-input.html"/>
 
         <link rel="import" href="~/bower_components/iron-icons/iron-icons.html">
+        <link rel="import" href="~/bower_components/iron-input/iron-input.html">
         <link rel="import" href="~/bower_components/iron-flex-layout/iron-flex-layout.html">
         <link rel="import" href="~/bower_components/iron-image/iron-image.html"/>
 
@@ -133,10 +136,17 @@
                 <div>
                     <paper-menu>
                         <a asp-controller="FletNix" asp-action="Index"><paper-item>Home</paper-item></a>
-                        <a asp-controller="FletNix" asp-action="About"><paper-item>About</paper-item></a>
-                        <a asp-controller="ManageMovies" asp-action="Index"><paper-item>Manage movies</paper-item></a>
-                        <a asp-controller="Movie" asp-action="Overview"><paper-item>Watch movies</paper-item></a>
-                        <a asp-controller="RateMovie" asp-action="Index"><paper-item>Rate movies</paper-item></a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="FletNix" asp-action="About"><paper-item>About</paper-item></a>
+                            if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="ManageMovies" asp-action="Index"><paper-item>Manage movies</paper-item></a>
+                                <a asp-controller="MovieAward" asp-action="Index"><paper-item>Award movies</paper-item></a>
+                            }
+                            <a asp-controller="Movie" asp-action="Overview"><paper-item>Watch movies</paper-item></a>
+                            <a asp-controller="RateMovie" asp-action="Index"><paper-item>Rate movies</paper-item></a>
+                        }
                     </paper-menu>
                 </div>
             </paper-header-panel>
@@ -146,7 +156,7 @@
                     <span class="title">FletNix</span>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <img class="profilePic" src="http://lorempixel.com/40/40/"/>
+                        <img class="profilePic" src="https://placehold.it/40x40"/>
                         <span>@User.Identity.Name</span>
                         <a class="btn" asp-controller="Auth" asp-action="Logout">
                             <paper-icon-button icon="exit-to-app"></paper-icon-button>

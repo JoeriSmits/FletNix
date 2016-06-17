@@ -15,12 +15,13 @@ namespace FletNix.Models
             _context = context;
         }
 
-        public IEnumerable<CustomerFeedback> getCustomerFeedbackByMovieId(int movieId)
+        public async Task<IEnumerable<CustomerFeedback>> getCustomerFeedbackByMovieId(int movieId)
         {
-            return _context.CustomerFeedback.Where(cf => cf.movie_id == movieId).ToList();
+            IQueryable<CustomerFeedback> query = _context.CustomerFeedback.AsNoTracking();
+            return await query.Where(cf => cf.movie_id == movieId).ToListAsync();
         }
 
-        public bool addCustomerFeedback(FletNixUser user, int rating, string comment, int movieId)
+        public async Task<bool> addCustomerFeedback(FletNixUser user, int rating, string comment, int movieId)
         {
             try
             {
@@ -32,7 +33,7 @@ namespace FletNix.Models
                 customerFeedback.customer_mail_address = user.Email;
 
                 _context.CustomerFeedback.Add(customerFeedback);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception)
@@ -41,9 +42,10 @@ namespace FletNix.Models
             }
         }
 
-        public IEnumerable<CustomerFeedback> getCustomerFeedbackByCustomer(string userEmail)
+        public async Task<IEnumerable<CustomerFeedback>> getCustomerFeedbackByCustomer(string userEmail)
         {
-            return _context.CustomerFeedback.Where(cf => cf.customer_mail_address == userEmail).ToList();
+            IQueryable<CustomerFeedback> query = _context.CustomerFeedback.AsNoTracking();
+            return await query.Where(cf => cf.customer_mail_address == userEmail).ToListAsync();
         }
     }
 }

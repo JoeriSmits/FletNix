@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace FletNix.Controllers
 {
+    [RequireHttps]
     public class MovieController : Controller
     {
         private IMovieRepository _repositoryMovie;
@@ -30,7 +31,7 @@ namespace FletNix.Controllers
         }
 
         [Authorize]
-        public IActionResult Overview([FromQuery] string search, [FromQuery] string from)
+        public async Task<IActionResult> Overview([FromQuery] string search, [FromQuery] string from)
         {
             OverviewMovieViewModel watchMovieViewModel = new OverviewMovieViewModel();
 
@@ -45,7 +46,7 @@ namespace FletNix.Controllers
                 movies = populairMovies;
             }
             watchMovieViewModel.populairMovies = movies;
-            
+
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var fromInt = 0;
@@ -56,7 +57,7 @@ namespace FletNix.Controllers
                     fromInt = int.Parse(from);
                 }
                 ViewData["search"] = search;
-                var searchedMovies = _repositoryMovie.GetMovieByTitle(search, fromInt);
+                var searchedMovies = await _repositoryMovie.GetMovieByTitle(search, fromInt);
                 watchMovieViewModel.searchedMovies = searchedMovies;
             }
 
@@ -69,12 +70,12 @@ namespace FletNix.Controllers
             DetailedMovieViewModel _detailedMovieViewModel = new DetailedMovieViewModel();
             var idInt = 0;
             int.TryParse(movie, out idInt);
-            _detailedMovieViewModel.detailedInformation = _repositoryMovie.GetMovieInfoById(idInt);
+            _detailedMovieViewModel.detailedInformation = await _repositoryMovie.GetMovieInfoById(idInt);
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            _detailedMovieViewModel.userWatchedMovie = _repositoryMovie.userWatchedMovie(idInt, user.Email);
+            _detailedMovieViewModel.userWatchedMovie = await _repositoryMovie.userWatchedMovie(idInt, user.Email);
 
-            _detailedMovieViewModel.ratings = _repositoryCustomerFeedback.getCustomerFeedbackByMovieId(idInt);
+            _detailedMovieViewModel.ratings = await _repositoryCustomerFeedback.getCustomerFeedbackByMovieId(idInt);
 
             return View(_detailedMovieViewModel);
         }
@@ -84,10 +85,10 @@ namespace FletNix.Controllers
         {
             var idInt = 0;
             int.TryParse(movie, out idInt);
-            var detailInformation = _repositoryMovie.GetMovieById(idInt);
+            var detailInformation = await _repositoryMovie.GetMovieById(idInt);
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var test = _repositoryWatchHistory.AddWatchHistory(idInt, user);
+            await _repositoryWatchHistory.AddWatchHistory(idInt, user);
 
             return View(detailInformation);
         }

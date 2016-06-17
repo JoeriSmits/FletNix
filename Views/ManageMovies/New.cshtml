@@ -1,0 +1,96 @@
+﻿@model FletNix.ViewModels.NewMovieModel
+@{
+    ViewData["Title"] = "Add a new movie";
+}
+
+
+<h1>Add a new movie</h1>
+<p>You can add a new movie on this page.</p>
+
+<form method="post" novalidate class="newMovie">
+    <div asp-validation-summary="ValidationSummary.ModelOnly"></div>
+
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label asp-for="Title"></label>
+        <input is="iron-input" asp-for="Title"/>
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div>
+        <label asp-for="Duration"></label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Duration"/>
+        <span asp-validation-for="Duration"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <textarea is="iron-input" asp-for="Description"></textarea>
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <label asp-for="Publication_year">Publication year</label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Publication_year"/>
+        <span asp-validation-for="Publication_year"></span>
+    </div>
+    <div>
+        <label asp-for="Previous_part">Previous part</label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Previous_part"/>
+        <span asp-validation-for="Previous_part"></span>
+    </div>
+    <div>
+        <label asp-for="Price"></label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Price"/>
+        <span asp-validation-for="Price"></span>
+    </div>
+    <div>
+        <label asp-for="Url"></label>
+        <input is="iron-input" type="text" asp-for="Url"/>
+        <span asp-validation-for="Url"></span>
+    </div>
+    <div>
+        <label asp-for="Minimum_age">Minimum age</label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Minimum_age"/>
+        <span asp-validation-for="Minimum_age"></span>
+    </div>
+    <div>
+        <label asp-for="SubmitGenres">Genres</label>
+        <select asp-for="SubmitGenres">
+            @foreach (var genre in Model.genres)
+            {
+                <option value="@genre.genre_name">@genre.genre_name</option>
+            }
+        </select>
+        <span asp-validation-for="SubmitGenres"></span>
+    </div>
+
+    <div>
+        <label asp-for="Directors"></label>
+        <select asp-for="Directors">
+            @foreach (var director in Model.ListOfPeople)
+            {
+                <option value="@director.person_id">@director.firstname @director.lastname</option>
+            }
+        </select>
+        <span asp-validation-for="Directors"></span>
+    </div>
+
+    <div>
+        <label asp-for="Cast"></label>
+        <select asp-for="Cast">
+            @foreach (var cast in Model.ListOfPeople)
+            {
+                <option value="@cast.person_id">@cast.firstname @cast.lastname</option>
+            }
+        </select>
+        <span asp-validation-for="Cast"></span>
+    </div>
+
+    <paper-button onclick="sendForm(this)">Create a new movie</paper-button>
+</form>
+
+
+<script>
+    var sendForm = function (element) {
+        element.parentElement.submit();
+    };
+</script>

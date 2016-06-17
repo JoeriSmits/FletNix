@@ -7,7 +7,7 @@ namespace FletNix.Models
 {
     public interface IWatchHistoryRepository
     {
-        bool AddWatchHistory(int movieId, FletNixUser user);
-        IEnumerable<Watchhistory> getWatchHistoryByCustomer(string userEmail);
+        Task<bool> AddWatchHistory(int movieId, FletNixUser user);
+        Task<IEnumerable<Watchhistory>> getWatchHistoryByCustomer(string userEmail);
     }
 }

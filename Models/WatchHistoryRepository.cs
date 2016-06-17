@@ -15,7 +15,7 @@ namespace FletNix.Models
             _context = context;
         }
 
-        public bool AddWatchHistory(int movieId, FletNixUser user)
+        public async Task<bool> AddWatchHistory(int movieId, FletNixUser user)
         {
             if (!alreadyCustomer(user))
             {
@@ -30,7 +30,7 @@ namespace FletNix.Models
                 try
                 {
                     _context.Customer.Add(customer);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
                 catch (Exception)
                 {
@@ -41,14 +41,16 @@ namespace FletNix.Models
             return addWatch(movieId, user);
         }
 
-        public IEnumerable<Watchhistory> getWatchHistoryByCustomer(string userEmail)
+        public async Task<IEnumerable<Watchhistory>> getWatchHistoryByCustomer(string userEmail)
         {
-            return _context.Watchhistory.Include(w => w.movie).Where(w => w.customer_mail_address == userEmail);
+            IQueryable<Watchhistory> query = _context.Watchhistory.AsNoTracking();
+            return await query.Include(w => w.movie).Where(w => w.customer_mail_address == userEmail).ToListAsync();
         }
 
         private bool alreadyCustomer(FletNixUser user)
         {
-            return _context.Customer.Count(c => c.customer_mail_address == user.Email) > 0;
+            IQueryable<Customer> query = _context.Customer.AsNoTracking();
+            return query.Count(c => c.customer_mail_address == user.Email) > 0;
         }
 
         private bool addWatch(int movieId, FletNixUser user)

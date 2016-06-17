@@ -7,8 +7,8 @@ namespace FletNix.Models
 {
     public interface ICustomerFeedbackRepository
     {
-        IEnumerable<CustomerFeedback> getCustomerFeedbackByMovieId(int movieId);
-        bool addCustomerFeedback(FletNixUser user, int rating, string comment, int movieId);
-        IEnumerable<CustomerFeedback> getCustomerFeedbackByCustomer(string userEmail);
+        Task<IEnumerable<CustomerFeedback>> getCustomerFeedbackByMovieId(int movieId);
+        Task<bool> addCustomerFeedback(FletNixUser user, int rating, string comment, int movieId);
+        Task<IEnumerable<CustomerFeedback>> getCustomerFeedbackByCustomer(string userEmail);
     }
 }

@@ -7,12 +7,14 @@ namespace FletNix.Models
 {
     public interface IMovieRepository
     {
-        IEnumerable<Movie> GetMovies(int from, int amount);
-        bool RemoveMovieById(int movieId, int from);
+        Task<IEnumerable<Movie>> GetMovies(int from, int amount);
+        Task<bool> RemoveMovieById(int movieId);
         IEnumerable<Movie> GetMostPopulairMovies();
-        IEnumerable<Movie> GetMovieByTitle(string title, int from);
-        IEnumerable<Movie> GetMovieInfoById(int movieId);
-        IEnumerable<Movie> GetMovieById(int movieId);
-        bool userWatchedMovie(int movieId, string userEmail);
+        Task<IEnumerable<Movie>> GetMovieByTitle(string title, int from);
+        Task<IEnumerable<Movie>> GetMovieInfoById(int movieId);
+        Task<IEnumerable<Movie>> GetMovieById(int movieId);
+        Task<bool> userWatchedMovie(int movieId, string userEmail);
+        Task AddMovie(Movie movie);
+        Task<IEnumerable<Movie>> GetAllMovieInfoById(int movieId);
     }
 }

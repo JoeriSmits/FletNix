@@ -1,1 +1,113 @@
-﻿<h1>Edit</h1>
+﻿@model FletNix.ViewModels.NewMovieModel
+@{
+    ViewData["Title"] = "Edit a movie";
+
+    var MovieInfo = Model.movie.First();
+
+    List<String> movieGenres = new List<string>();
+    foreach (var movieGenre in MovieInfo.Movie_Genre)
+    {
+        movieGenres.Add(movieGenre.genre_name);
+    }
+}
+
+<h1>Edit a movie</h1>
+<p>You can edit a movie on this page.</p>
+
+<form method="post" novalidate class="newMovie">
+    <div asp-validation-summary="ValidationSummary.ModelOnly"></div>
+
+    @Html.AntiForgeryToken()
+
+    <input is="iron-input" name="movieId" type="hidden" value="@MovieInfo.movie_id"/>
+    <div>
+        <label asp-for="Title"></label>
+        <input is="iron-input" asp-for="Title" value="@MovieInfo.title" />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div>
+        <label asp-for="Duration"></label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Duration" value="@MovieInfo.duration" />
+        <span asp-validation-for="Duration"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <p>@MovieInfo.description</p>
+        <label>&nbsp;</label>
+        <textarea asp-for="Description"></textarea>
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <label asp-for="Publication_year">Publication year</label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Publication_year" value="@MovieInfo.publication_year" />
+        <span asp-validation-for="Publication_year"></span>
+    </div>
+    <div>
+        <label asp-for="Previous_part">Previous part</label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Previous_part" value="@MovieInfo.previous_part" />
+        <span asp-validation-for="Previous_part"></span>
+    </div>
+    <div>
+        <label asp-for="Price"></label>
+        <input is="iron-input" type="text" asp-for="Price" value="@MovieInfo.price" />
+        <span asp-validation-for="Price"></span>
+    </div>
+    <div>
+        <label asp-for="Url"></label>
+        <input is="iron-input" type="text" asp-for="Url"  value="@MovieInfo.URL" />
+        <span asp-validation-for="Url"></span>
+    </div>
+    <div>
+        <label asp-for="Minimum_age">Minimum age</label>
+        <input is="iron-input" prevent-invalid-input allowed-pattern="[0-9]" type="number" asp-for="Minimum_age" value="@MovieInfo.minimum_age" />
+        <span asp-validation-for="Minimum_age"></span>
+    </div>
+    <div>
+        <label asp-for="SubmitGenres">Genres</label>
+        <select asp-for="SubmitGenres">
+            @foreach (var genre in Model.genres)
+            {
+                if (movieGenres.Contains(genre.genre_name))
+                {
+                    <option value="@genre.genre_name" selected="true">@genre.genre_name</option>
+                }
+                else
+                {
+                    <option value="@genre.genre_name">@genre.genre_name</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="SubmitGenres"></span>
+    </div>
+
+    <div>
+        <label asp-for="Directors"></label>
+        <select asp-for="Directors">
+            @foreach (var director in Model.ListOfPeople)
+            {
+                <option value="@director.person_id">@director.firstname @director.lastname</option>
+            }
+        </select>
+        <span asp-validation-for="Directors"></span>
+    </div>
+
+    <div>
+        <label asp-for="Cast"></label>
+        <select asp-for="Cast">
+            @foreach (var cast in Model.ListOfPeople)
+            {
+                <option value="@cast.person_id">@cast.firstname @cast.lastname</option>
+            }
+        </select>
+        <span asp-validation-for="Cast"></span>
+    </div>
+
+    <paper-button onclick="sendForm(this)">Update movie</paper-button>
+</form>
+
+
+<script>
+    var sendForm = function (element) {
+        element.parentElement.submit();
+    };
+</script>

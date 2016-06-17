@@ -8,6 +8,7 @@ using Microsoft.AspNet.Authorization;
 
 namespace FletNix.Controllers
 {
+    [RequireHttps]
     public class FletNixController : Controller
     {  
         private IFletNixRepository _repository;
@@ -16,12 +17,10 @@ namespace FletNix.Controllers
         {
             _repository = repository;
         }
-        
+
         public IActionResult Index()
         {
-            var genres = _repository.GetAllGenres();
-            
-            return View(genres);
+            return View();
         }
 
         [Authorize]

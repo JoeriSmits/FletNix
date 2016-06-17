@@ -9,6 +9,7 @@ using Microsoft.AspNet.Mvc;
 
 namespace FletNix.Controllers
 {
+    [RequireHttps]
     public class AuthController : Controller
     {
         private SignInManager<FletNixUser> _signInManager;
@@ -28,6 +29,7 @@ namespace FletNix.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel vm, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -42,7 +44,14 @@ namespace FletNix.Controllers
                     }
                     else
                     {
-                        return Redirect(returnUrl);
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("About", "FletNix");
+                        }
                     }
                 }
                 else
